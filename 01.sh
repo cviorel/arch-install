@@ -37,6 +37,9 @@ fi
 # Update the system clock
 timedatectl set-ntp true
 
+# Update keyrings to latest to prevent packages failing to install
+pacman -Sy --noconfirm archlinux-keyring
+
 # Zap all on disk
 sgdisk -Z $DISK
 
@@ -137,7 +140,7 @@ pacman -S --noconfirm intel-ucode \
 	pipewire{,-alsa,-pulse,-jack} wireplumber \
 	man-db man-pages texinfo \
 	lightdm lightdm-gtk-greeter acpid \
-	openbox obconf menumaker archlinux-xdg-menu \
+	openbox obconf menumaker archlinux-xdg-menu dex \
 	xdg-user-dirs xdg-utils git lsof \
 	avahi bluez bluez-utils \
 	networkmanager network-manager-applet nm-connection-editor \
@@ -154,7 +157,7 @@ pacman -S --noconfirm intel-ucode \
 	xcompmgr geany code xsettingsd brightnessctl \
 	gtk-engines gtk-engine-murrine \
 	hsetroot rdesktop vim keychain \
-	arc-gtk-theme arc-icon-theme papirus-icon-theme obsidian-icon-theme \
+	arc-gtk-theme arc-icon-theme papirus-icon-theme obsidian-icon-theme xcursor-vanilla-dmz-aa \
 	cups cups-pdf \
 	nvidia nvidia-utils nvidia-settings \
 	volumeicon osmo sox btop \
@@ -176,11 +179,9 @@ echo '
 (sleep 1s && nm-applet) &
 (sleep 1s && volumeicon) &
 (sleep 1s && osmo) &
-(sleep 2s && setxkbmap -option grp:switch "us","ro(std)") &
-(sleep 5s && xxkb) &
 ' | tee -a /home/$USERNAME/.config/openbox/autostart
 
-echo "
+cat <<EOT > /home/$USERNAME/.Xresources
 ! ~/.Xresources
 
 ! General settings
@@ -296,9 +297,9 @@ XTerm*color12:      #729fcf
 XTerm*color13:      #ad7fa8
 XTerm*color14:      #00f5e9
 XTerm*color15:      #eeeeec
-" | tee /home/$USERNAME/.Xresources
+EOT
 
-echo '
+cat <<EOT > /home/$USERNAME/.xinitrc
 #!/usr/bin/env bash
 
 xcompmgr -cCfF -t-5 -l-5 -r4.2 -o.55 -D6 &
@@ -313,9 +314,9 @@ export LANGUAGE="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
 
 exec openbox-session
-' | tee /home/$USERNAME/.xinitrc
+EOT
 
-echo'
+cat <<EOT > /home/$USERNAME/.xxkbrc
 # ~.xxkbrc:
 #
 XXkb.image.path: /usr/share/xxkb/
@@ -339,9 +340,19 @@ XXkb.controls.focusout: no
 XXkb.mainwindow.xpm.1: en15.xpm
 XXkb.mainwindow.xpm.2:
 XXkb.mainwindow.label.enable: no
-' | tee /home/$USERNAME/.xxkbrc
+EOT
 
-#chown -R $USERNAME:$USERNAME /home/$USERNAME
+cp /etc/lightdm/lightdm-gtk-greeter.conf /etc/lightdm/lightdm-gtk-greeter.conf_`date +'%Y-%m-%d'`
+
+cat <<EOT >> /etc/lightdm/lightdm-gtk-greeter.conf
+theme-name = Arc
+icon-theme-name = Arc
+cursor-theme-name = DMZ-Black
+cursor-theme-size = 32
+font-name = AurulentSansM Nerd Font 12
+EOT
+
+chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 # Exit chroot
 EOF
