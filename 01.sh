@@ -2,12 +2,12 @@
 
 # https://github.com/deionizedoatmeal/popdots
 # https://github.com/3lpsy/arch-galactic/blob/master/packages.sh
-https://github.com/addy-dclxvi
-https://github.com/ilnanny/Artwork-Resources
-https://github.com/ilnanny/backgrounds/tree/master
-https://github.com/ilnanny
-https://github.com/ilnanny/gentoo-openbox/tree/master/home/.fonts
-https://github.com/zakuradev
+# https://github.com/addy-dclxvi
+# https://github.com/ilnanny/Artwork-Resources
+# https://github.com/ilnanny/backgrounds/tree/master
+# https://github.com/ilnanny
+# https://github.com/ilnanny/gentoo-openbox/tree/master/home/.fonts
+# https://github.com/zakuradev
 
 
 
@@ -160,7 +160,7 @@ pacman -S --noconfirm intel-ucode \
 	arc-gtk-theme arc-icon-theme papirus-icon-theme obsidian-icon-theme xcursor-vanilla-dmz-aa \
 	cups cups-pdf \
 	nvidia nvidia-utils nvidia-settings \
-	volumeicon osmo sox btop \
+	volumeicon sox btop \
 	rxvt-unicode urxvt-perls
 
 # Enable services
@@ -178,7 +178,6 @@ echo '
 (sleep 1s && tint2) &
 (sleep 1s && nm-applet) &
 (sleep 1s && volumeicon) &
-(sleep 1s && osmo) &
 ' | tee -a /home/$USERNAME/.config/openbox/autostart
 
 cat <<EOT > /home/$USERNAME/.Xresources
